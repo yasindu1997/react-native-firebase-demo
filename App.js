@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Text, View, StyleSheet } from 'react-native'
 import { TextInput, Button } from 'react-native-paper';
+import firestore from '@react-native-firebase/firestore';
 
 export default class App extends Component {
   constructor(props) {
@@ -10,6 +11,24 @@ export default class App extends Component {
       address: '',
       salary: ''
     }
+    this.saveCustomer = this.saveCustomer.bind(this);
+  }
+
+  saveCustomer() {
+    firestore()
+      .collection('customers')
+      .add({
+        name: this.state.name,
+        address: this.state.address,
+        salary: this.state.salary
+      })
+      .then(() => {
+        this.setState({
+          name: '',
+          address: '',
+          salary: ''
+        })
+      });
   }
 
   render() {
@@ -52,7 +71,7 @@ export default class App extends Component {
 
         <Button
           mode="contained"
-          onPress={() => console.log('Pressed')}
+          onPress={this.saveCustomer}
           style={styles.btn}
           color='green'
         >
@@ -104,6 +123,6 @@ const styles = StyleSheet.create({
   },
   lable: {
     marginBottom: 50,
-    marginTop:10
+    marginTop: 10
   }
 })
